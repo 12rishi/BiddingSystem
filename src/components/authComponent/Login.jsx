@@ -8,10 +8,10 @@ const Login = () => {
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
   console.log("checking");
-  const onLoginSubmit = async (data) => {
+  const onSubmit = async (data) => {
     try {
       console.log("starting");
-      const loginReq = await API.post(`/login/${role}`, data);
+      const loginReq = await API.post(`login/${role}`, data);
       const id = loginReq.data.id;
       console.log(id);
       if (loginReq.status === 200) {
@@ -24,9 +24,10 @@ const Login = () => {
       alert(error.message);
     }
   };
+
   return (
     <>
-      <Form onLoginSubmit={onLoginSubmit} auth={"login"} role={role} />
+      <Form auth={"login"} role={role} onSubmit={onSubmit} />
     </>
   );
 };

@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import ThriftLogo from "./ThriftLogo.png";
 
-export const Form = ({ role, auth, onSubmit, onLoginSubmit }) => {
+export const Form = ({ role, auth, onSubmit }) => {
   const checkError = useRef();
   const [img, setImg] = useState([]);
   const [error, setError] = useState("");
@@ -20,8 +20,8 @@ export const Form = ({ role, auth, onSubmit, onLoginSubmit }) => {
   });
 
   const handleChange = (e) => {
-    e.preventDefault();
     const { name, value, files } = e.target;
+    console.log(files);
     setImg(files);
     setFormDatas({
       ...formDatas,
@@ -39,12 +39,13 @@ export const Form = ({ role, auth, onSubmit, onLoginSubmit }) => {
       }
       setError("");
     }
-
-    if (formDatas.password !== formDatas.confirmPassword) {
-      setPwError("password must match");
-      return;
+    if (auth === "register") {
+      if (formDatas.password !== formDatas.confirmPassword) {
+        setPwError("password must match");
+        return;
+      }
+      setPwError("");
     }
-    setPwError("");
 
     if (auth === "register") {
       const phoneNumber = formDatas.phoneNumber.length;
@@ -67,14 +68,7 @@ export const Form = ({ role, auth, onSubmit, onLoginSubmit }) => {
     }
     formData.append("email", formDatas.email);
     formData.append("password", formDatas.password);
-    if (auth === "register") {
-      onSubmit(formData, formDatas.email);
-      return;
-    }
-    if (auth === "login") {
-      onLoginSubmit(formData);
-      return;
-    }
+    onSubmit(formData, formDatas.email);
   };
 
   return (
@@ -158,6 +152,7 @@ export const Form = ({ role, auth, onSubmit, onLoginSubmit }) => {
                           type="password"
                           id="password"
                           name="password"
+                          autoComplete="off"
                           placeholder="Enter your password"
                           minLength="8"
                           required
@@ -260,7 +255,7 @@ export const Form = ({ role, auth, onSubmit, onLoginSubmit }) => {
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span>Sign In</span>
+                          <span>{auth === "login" ? "login" : "register"}</span>
                         </button>
                         {/* Divider: With Label */}
                         <div className="my-5 flex items-center">
