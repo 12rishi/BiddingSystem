@@ -26,7 +26,7 @@ const AddItem = () => {
       toast.success(successMessage);
       dispatch(setStatus(null));
       dispatch(setSuccessMessage(null));
-      navigate("/listItem");
+      window.location.href = "/listItem";
     } else if (status === STATUS.ERROR && errorMessage) {
       toast.error(errorMessage);
       dispatch(setStatus(null));

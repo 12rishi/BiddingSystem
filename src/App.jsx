@@ -11,6 +11,10 @@ import store from "../store/store";
 import { Home } from "./components/pages/home/Home";
 import AddItem from "./components/pages/addItem/AddItem";
 import MyListing from "./components/pages/myListing/MyListing";
+import SinglePageitem from "./components/pages/myListing/SinglePageitem";
+import "tailwindcss/tailwind.css"; // Ensure this is imported in your main entry file
+import "daisyui";
+import STATUS from "../status/status";
 
 function App() {
   return (
@@ -38,6 +42,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/addItem" element={<AddItem />} />
             <Route path="/listItem" element={<MyListing />} />
+            <Route path="/item/:id" element={<SinglePageitem />} />
           </Routes>
         </BrowserRouter>
       </Provider>

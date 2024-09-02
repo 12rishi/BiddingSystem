@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import STATUS from "../status/status";
 import API from "../src/http/axiosInstance";
+import axios from "axios";
 
 const itemSlice = createSlice({
   name: "itemslice",
@@ -57,17 +58,17 @@ export function renderItem() {
   return async function renderItemThunk(dispatch) {
     try {
       dispatch(setStatus(STATUS.LOADING));
+      console.log("hello", localStorage.getItem("jsonWebToken"));
       const response = await API.get("/item", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
         },
       });
-      console.log(response.status, response.data);
+      console.log(response.status);
       if (response?.status === 200 && response?.data) {
         dispatch(setItemData(response?.data?.data));
         dispatch(setStatus(STATUS.SUCCESS));
         dispatch(setSuccessMessage(response?.data?.message));
-        console.log(response.data.data + "tambeeee");
       } else {
         dispatch(setErrorMessage(response?.data?.message));
         dispatch(setStatus(STATUS.ERROR));

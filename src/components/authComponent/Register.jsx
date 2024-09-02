@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { postRegister, setStatus } from "../../../store/authSlice";
 import STATUS from "../../../status/status";
+import Spinner from "../spinner/Spinner";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,7 +23,6 @@ const Register = () => {
   useEffect(() => {
     if (status === STATUS.SUCCESS) {
       dispatch(setStatus(null));
-      toast.success(successMessage);
 
       navigate(`/sendOtp?email=${email}&role=${role}`);
     } else if (status === STATUS.ERROR) {
@@ -33,7 +33,11 @@ const Register = () => {
 
   return (
     <>
-      <Form onSubmit={onSubmit} auth={"register"} role={role} />
+      {status === STATUS.LOADING ? (
+        <Spinner />
+      ) : (
+        <Form onSubmit={onSubmit} auth={"register"} role={role} />
+      )}
     </>
   );
 };

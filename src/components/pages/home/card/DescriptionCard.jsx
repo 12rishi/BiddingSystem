@@ -23,7 +23,10 @@ const DescriptionCard = () => {
           Reach millons of buyers and maximize your profits with our seemless
           auction process.
         </p>
-        <Link class="inline-flex items-center  py-2 text-sm font-medium text-center text-white bg-[#ff8749] p-1 px-2 border border-white rounded-full hover:bg-[#f6651a]">
+        <Link
+          to={"/addItem"}
+          class="inline-flex items-center  py-2 text-sm font-medium text-center text-white bg-[#ff8749] p-1 px-2 border border-white rounded-full hover:bg-[#f6651a]"
+        >
           Start Selling
           <svg
             class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
