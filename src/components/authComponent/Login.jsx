@@ -11,6 +11,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
+<<<<<<< HEAD
   const dispatch = useDispatch();
   const { status, token, error, successMessage } = useSelector(
     (store) => store.auth
@@ -51,6 +52,29 @@ const Login = () => {
   return (
     <>
       <Form onSubmit={onSubmit} auth={"login"} role={role} />
+=======
+  console.log("checking");
+  const onSubmit = async (data) => {
+    try {
+      console.log("starting");
+      const loginReq = await API.post(`login/${role}`, data);
+      const id = loginReq.data.id;
+      console.log(id);
+      if (loginReq.status === 200) {
+        console.log("hello");
+        navigate(`/home?role=${role}&id=${id}`);
+      } else {
+        alert(loginReq.data.message);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  return (
+    <>
+      <Form auth={"login"} role={role} onSubmit={onSubmit} />
+>>>>>>> b6d5298edbe982e3ae71d11d8ed6716b7a3ee674
     </>
   );
 };
