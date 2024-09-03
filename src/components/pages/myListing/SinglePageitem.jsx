@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../navbar/Navbar";
 import { Footer } from "../../footer/Footer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import API from "../../../http/axiosInstance";
 
 const SinglePageitem = () => {
   const [data, setData] = useState({});
+  const [currentTime, setCurrentTime] = useState("");
+  const [timeDiff, setTimeDiff] = useState("");
+  const [dbTime, setDbTime] = useState("");
   const [images, setImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -23,6 +26,34 @@ const SinglePageitem = () => {
         setData(response.data.data);
         const itemImage = JSON.parse(response.data.data.itemImages);
         setImages(itemImage);
+
+        const createdAt = new Date(response.data.data.createdAt);
+
+        // Extract hours from createdAt and current time
+        const dbHours = createdAt.getHours();
+        setDbTime(dbHours);
+
+        const currentHours = new Date().getHours();
+        setCurrentTime(currentHours);
+
+        // Calculate the time difference
+        const diff = currentHours - dbHours;
+        setTimeDiff(diff);
+
+        // Check if the dates are the same
+        const currentDate = new Date();
+        const sameDate =
+          currentDate.getDate() === createdAt.getDate() &&
+          currentDate.getMonth() === createdAt.getMonth() &&
+          currentDate.getFullYear() === createdAt.getFullYear();
+
+        // Check if the conditions meet to show the Edit button
+        if (diff <= 1 && sameDate) {
+          setData((prevState) => ({
+            ...prevState,
+            showEditButton: true,
+          }));
+        }
       }
     } catch (error) {
       console.error("Error fetching the item:", error);
@@ -96,19 +127,22 @@ const SinglePageitem = () => {
                   <span className="italic font-bold">Shipping Date</span>:{" "}
                   {data.createdAt
                     ? new Date(data.createdAt).toLocaleDateString()
-                    : "2024-09-05"}
+                    : ""}
                 </p>
                 <p className="text-gray-600 mb-4">
                   <span className="italic font-bold">BiddingStatus</span>:{" "}
                   {data.availableForBidding}
                 </p>
                 <div className="flex space-y-4 flex-col">
-                  <button className="bg-[#52b5b5] text-white py-2 px-4 rounded ">
-                    View Bidders
-                  </button>
-                  <button className="bg-[#ff8749] text-white py-2 px-4 rounded ">
-                    Edit Listing
-                  </button>
+                  {data.showEditButton ? (
+                    <Link to={`/edit/${data.id}`}>
+                      {" "}
+                      <button className="bg-[#ff8749] text-white py-2 px-4 rounded">
+                        Edit Listing
+                      </button>
+                    </Link>
+                  ) : null}
+
                   {data.availableForBidding === "completed" ? (
                     <button className="bg-[#ff8749] text-white py-2 px-4 rounded">
                       Relaunch Auction

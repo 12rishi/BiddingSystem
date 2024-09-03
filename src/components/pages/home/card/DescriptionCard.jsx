@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const DescriptionCard = () => {
   return (
     <>
-      <div class=" w-[80%] mx-auto text-center mt-12  space-y-5  p-6 bg-gradient-to-r from-[#244f4f] to-[#52d5b5] border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <div class=" w-[80%] mx-auto text-center mt-12  space-y-5  p-6 bg-gradient-to-r from-[#244f4f] to-[#52b5b5] border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <a href="#">
           <h5
             class="mb-2 text-6xl   text-[#008080] font-extrabold dark:text-white"

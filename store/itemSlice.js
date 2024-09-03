@@ -79,7 +79,29 @@ export function renderItem() {
     }
   };
 }
-
+export function handleEdit(data, id) {
+  return async function handleEditThunk(dispatch) {
+    try {
+      dispatch(setStatus(STATUS.LOADING));
+      const response = await API.post(`/edit/${id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+        },
+      });
+      if (response?.status === 200 && response?.data) {
+        dispatch(setStatus(STATUS.SUCCESS));
+        dispatch(setSuccessMessage(response?.data?.message));
+      } else {
+        dispatch(setErrorMessage(response?.data?.message));
+        dispatch(setStatus(STATUS.ERROR));
+      }
+    } catch (error) {
+      dispatch(setErrorMessage(error?.response?.data?.message));
+      dispatch(setStatus(STATUS.ERROR));
+    }
+  };
+}
 // export function renderItem() {
 //   return async function renderItemThunk(dispatch) {
 //     try {

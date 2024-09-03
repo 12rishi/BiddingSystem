@@ -11,7 +11,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
-<<<<<<< HEAD
   const dispatch = useDispatch();
   const { status, token, error, successMessage } = useSelector(
     (store) => store.auth
@@ -20,22 +19,6 @@ const Login = () => {
 
   const onSubmit = (data) => {
     dispatch(postLogin(data, role));
-
-    // try {
-    //   const loginReq = await API.post(`/login/${role}`, data);
-    //   const id = loginReq.data.id;
-
-    //   if (loginReq.status === 200) {
-    //     toast.success(loginReq.data.message);
-    //     return navigate(`/home?role=${role}&id=${id}`);
-    //   }
-    // } catch (error) {
-    //   if (error.response) {
-    //     toast.error(error.response.data.message);
-    //   } else {
-    //     toast.error(error);
-    //   }
-    // }
   };
 
   useEffect(() => {
@@ -43,6 +26,10 @@ const Login = () => {
       dispatch(setStatus(null));
       localStorage.setItem("jsonWebToken", token);
       toast.success(successMessage);
+      localStorage.setItem("role", role);
+      if (role === "bidder") {
+        return navigate(`/bidderHome?role=${role}`);
+      }
       navigate(`/home?role=${role}`);
     } else if (status === STATUS.ERROR) {
       dispatch(setStatus(null));
@@ -52,29 +39,6 @@ const Login = () => {
   return (
     <>
       <Form onSubmit={onSubmit} auth={"login"} role={role} />
-=======
-  console.log("checking");
-  const onSubmit = async (data) => {
-    try {
-      console.log("starting");
-      const loginReq = await API.post(`login/${role}`, data);
-      const id = loginReq.data.id;
-      console.log(id);
-      if (loginReq.status === 200) {
-        console.log("hello");
-        navigate(`/home?role=${role}&id=${id}`);
-      } else {
-        alert(loginReq.data.message);
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  return (
-    <>
-      <Form auth={"login"} role={role} onSubmit={onSubmit} />
->>>>>>> b6d5298edbe982e3ae71d11d8ed6716b7a3ee674
     </>
   );
 };

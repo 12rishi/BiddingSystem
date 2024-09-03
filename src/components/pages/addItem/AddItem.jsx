@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import STATUS from "../../../../status/status";
 import Navbar from "../../navbar/Navbar";
 import { Footer } from "../../footer/Footer";
+import AddItemForm from "./Form";
 
 const AddItem = () => {
   const { successMessage, errorMessage, status } = useSelector(
@@ -41,7 +42,7 @@ const AddItem = () => {
   return (
     <>
       <Navbar />
-      <Form onSubmit={onSubmit} />
+      <AddItemForm onSubmit={onSubmit} />
       <Footer />
     </>
   );

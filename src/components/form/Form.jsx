@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ThriftLogo from "./ThriftLogo.png";
 
 export const Form = ({ role, auth, onSubmit }) => {
@@ -39,10 +39,6 @@ export const Form = ({ role, auth, onSubmit }) => {
       }
       setError("");
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> b6d5298edbe982e3ae71d11d8ed6716b7a3ee674
     if (auth === "register") {
       if (formDatas.password !== formDatas.confirmPassword) {
         setPwError("password must match");
@@ -73,18 +69,12 @@ export const Form = ({ role, auth, onSubmit }) => {
       formData.append("phoneNumber", formDatas.phoneNumber);
       formData.append("confirmPassword", formDatas.confirmPassword);
     }
-<<<<<<< HEAD
 
     if (auth === "register") {
       onSubmit(formData, formDatas.email);
     } else {
       onSubmit(formData);
     }
-=======
-    formData.append("email", formDatas.email);
-    formData.append("password", formDatas.password);
-    onSubmit(formData, formDatas.email);
->>>>>>> b6d5298edbe982e3ae71d11d8ed6716b7a3ee674
   };
 
   return (
@@ -271,21 +261,8 @@ export const Form = ({ role, auth, onSubmit }) => {
                               clipRule="evenodd"
                             />
                           </svg>
-<<<<<<< HEAD
                           <span>
                             {auth === "login" ? "login" : "register"}{" "}
-=======
-                          <span>{auth === "login" ? "login" : "register"}</span>
-                        </button>
-                        {/* Divider: With Label */}
-                        <div className="my-5 flex items-center">
-                          <span
-                            aria-hidden="true"
-                            className="h-0.5 grow rounded bg-gray-100 dark:bg-gray-700/75"
-                          />
-                          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                            or sign in with
->>>>>>> b6d5298edbe982e3ae71d11d8ed6716b7a3ee674
                           </span>
                         </button>
                         {role === "bidder" ? (

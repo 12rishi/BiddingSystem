@@ -1,16 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineNotifications } from "react-icons/md";
 import TH from "./TH.png";
+import { useDispatch, useSelector } from "react-redux";
+import { setRole } from "../../../store/authSlice";
 
 const Navbar = () => {
+  const { role } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = (e) => {
     e.preventDefault();
 
     localStorage.removeItem("jsonWebToken");
+    localStorage.removeItem("role");
     navigate("/");
   };
+  useEffect(() => {
+    dispatch(setRole(localStorage.getItem("role")));
+  }, [role]);
   return (
     <nav className="bg-[#52B5B5] p-4 shadow-xl">
       <div className="container mx-auto flex items-center justify-between">
@@ -23,9 +31,22 @@ const Navbar = () => {
 
         {/* Menu Items */}
         <div className="space-x-10 flex  items-center">
-          <Link to="/home" className="text-white hover:text-gray-200">
-            Home
-          </Link>
+          {role === "seller" && (
+            <Link
+              to={`/home?role=${role}`}
+              className="text-white hover:text-gray-200"
+            >
+              Home
+            </Link>
+          )}
+          {role === "bidder" && (
+            <Link
+              to={`/bidderHome?role=${role}`}
+              className="text-white hover:text-gray-200"
+            >
+              Home
+            </Link>
+          )}
           <Link to="/listItem" className="text-white hover:text-gray-200">
             My Listing
           </Link>
