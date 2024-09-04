@@ -30,17 +30,15 @@ const BidderHome = () => {
   return (
     <>
       <Navbar />
-      {timingSet >= 9 &&
-      timingSet <= 21 &&
-      biddingTime &&
-      itemData &&
-      itemData.length > 0 ? (
-        itemData.map((data) => {
-          return <Card data={data} />;
-        })
-      ) : (
-        <NoItem />
-      )}
+      <div className="grid grid-cols-3 gap-y-10 gap-x-6 p-8">
+        {itemData && itemData.length > 0 ? (
+          itemData.map((data) => {
+            return <Card data={data} />;
+          })
+        ) : (
+          <NoItem />
+        )}
+      </div>
       <Footer />
     </>
   );
