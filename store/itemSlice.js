@@ -35,12 +35,16 @@ export function handleItemPost(data) {
   return async function handleItemPostThunk(dispatch) {
     try {
       dispatch(setStatus(STATUS.LOADING));
-      const response = await API.post("/item", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
-        },
-      });
+      const response = await API.post(
+        `/item/${localStorage.getItem("role")}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+          },
+        }
+      );
       if (response?.status === 200 && response?.data) {
         dispatch(setStatus(STATUS.SUCCESS));
         dispatch(setSuccessMessage(response?.data?.message));
@@ -59,7 +63,7 @@ export function renderItem() {
     try {
       dispatch(setStatus(STATUS.LOADING));
       console.log("hello", localStorage.getItem("jsonWebToken"));
-      const response = await API.get("/item", {
+      const response = await API.get(`/item/${localStorage.getItem("role")}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
         },
@@ -83,12 +87,16 @@ export function handleEdit(data, id) {
   return async function handleEditThunk(dispatch) {
     try {
       dispatch(setStatus(STATUS.LOADING));
-      const response = await API.post(`/edit/${id}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
-        },
-      });
+      const response = await API.post(
+        `/edit/${localStorage.getItem("role")}/${id}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+          },
+        }
+      );
       if (response?.status === 200 && response?.data) {
         dispatch(setStatus(STATUS.SUCCESS));
         dispatch(setSuccessMessage(response?.data?.message));

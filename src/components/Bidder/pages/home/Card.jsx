@@ -9,7 +9,7 @@ const Card = ({ data }) => {
   console.log(data);
   return (
     <>
-      <Link>
+      <Link to={`/bidderItem/${data.id}`}>
         <div className="max-w-28 mx-auto   shadow-lg rounded-xl overflow-hidden transform transition-all hover:scale-105 hover:shadow-2xl sm:max-w-48 md:max-w-md lg:max-w-lg ">
           <div className="relative p-4">
             <span className="absolute left-0 top-[50%] bg-white text-black font-bold text-lg py-1 px-3 rounded-br-lg transform -translate-y-1/2 -translate-x-2 animate-none md:text-xl lg:text-2xl">

@@ -13,11 +13,14 @@ const BidderHome = () => {
     const time = new Date().getHours();
     setTimingSet(time);
     const renderItem = async () => {
-      const response = await API.get("/bidderItems", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
-        },
-      });
+      const response = await API.get(
+        `/bidderItems/${localStorage.getItem("role")}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+          },
+        }
+      );
       if (response.status === 200) {
         setItemData(response?.data?.data);
       }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../../navbar/Navbar";
 import { Footer } from "../../footer/Footer";
 import DescriptionCard from "./card/DescriptionCard";
@@ -8,8 +8,23 @@ import Flow from "./Flow.png";
 import Hammer from "./Hammer.png";
 import Linking from "./Linking.png";
 import Clock from "./Clock.png";
+import { useSocket } from "../../../../Socket/SocketContext";
 
 export const Home = () => {
+  const socket = useSocket();
+  useEffect(() => {
+    if (socket) {
+      socket.emit("hello", "I am home page");
+      socket.on("hi", (hi) => {
+        console.log(hi);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off("hi");
+      }
+    };
+  }, [socket]);
   return (
     <>
       <Navbar />

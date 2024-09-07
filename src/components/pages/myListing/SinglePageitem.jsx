@@ -3,6 +3,7 @@ import Navbar from "../../navbar/Navbar";
 import { Footer } from "../../footer/Footer";
 import { Link, useParams } from "react-router-dom";
 import API from "../../../http/axiosInstance";
+import { useSocket } from "../../../../Socket/SocketContext";
 
 const SinglePageitem = () => {
   const [data, setData] = useState({});
@@ -11,16 +12,21 @@ const SinglePageitem = () => {
   const [dbTime, setDbTime] = useState("");
   const [images, setImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showBiddingTable, setShowBiddingTable] = useState(false);
+  const [bidders, setBidders] = useState([]);
 
   const { id } = useParams();
-
+  const socket = useSocket();
   const fetchSingleItem = async () => {
     try {
-      const response = await API.get(`/item/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
-        },
-      });
+      const response = await API.get(
+        `/item/${localStorage.getItem("role")}/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+          },
+        }
+      );
 
       if (response?.data?.data) {
         setData(response.data.data);
@@ -29,25 +35,21 @@ const SinglePageitem = () => {
 
         const createdAt = new Date(response.data.data.createdAt);
 
-        // Extract hours from createdAt and current time
         const dbHours = createdAt.getHours();
         setDbTime(dbHours);
 
         const currentHours = new Date().getHours();
         setCurrentTime(currentHours);
 
-        // Calculate the time difference
         const diff = currentHours - dbHours;
         setTimeDiff(diff);
 
-        // Check if the dates are the same
         const currentDate = new Date();
         const sameDate =
           currentDate.getDate() === createdAt.getDate() &&
           currentDate.getMonth() === createdAt.getMonth() &&
           currentDate.getFullYear() === createdAt.getFullYear();
 
-        // Check if the conditions meet to show the Edit button
         if (diff <= 1 && sameDate) {
           setData((prevState) => ({
             ...prevState,
@@ -76,13 +78,41 @@ const SinglePageitem = () => {
     );
   };
 
+  const handleViewBidding = () => {
+    setShowBiddingTable(true); // Show the table
+  };
+
+  const handleCancelBidding = () => {
+    setShowBiddingTable(false); // Hide the table
+  };
+  useEffect(() => {
+    if (socket && id) {
+      socket.emit("sendBiddingData", id);
+    }
+  }, [socket, id]);
+  useEffect(() => {
+    if (socket) {
+      socket.on("fetchBiddingData", (data) => {
+        if (data.length > 0) {
+          setBidders(data);
+          console.log(data, data.length);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("fetchBiddingData");
+      }
+    };
+  }, [socket]);
+
   return (
     <>
       <Navbar />
       <div className="bg-[#f0f8ff] p-5">
         {data && (
-          <div className="max-w-7xl mx-auto bg-white   shadow-md h-max rounded-sm overflow-hidden p-7 mt-11 mb-10">
-            {/* Image Container */}
+          <div className="max-w-7xl mx-auto bg-white shadow-md h-max rounded-sm overflow-hidden p-7 mt-11 mb-10">
             <div className="relative w-full bg-white p-3">
               {images.length > 0 && (
                 <img
@@ -99,13 +129,12 @@ const SinglePageitem = () => {
               </button>
               <button
                 onClick={handleNextImage}
-                className="absolute top-1/2 right-9 transform -translate-y-1/2 shadow-sm shadow-black bg-white   text-black p-2 rounded-full"
+                className="absolute top-1/2 right-9 transform -translate-y-1/2 shadow-sm shadow-black bg-white text-black p-2 rounded-full"
               >
                 &gt;
               </button>
             </div>
 
-            {/* Description Container */}
             <div className="p-4 flex w-[100%] justify-between">
               <div className="w-[50%] pl-14 ">
                 <h2 className="text-3xl font-semibold mb-2">
@@ -150,9 +179,53 @@ const SinglePageitem = () => {
                   ) : (
                     ""
                   )}
+
+                  {data.availableForBidding === "available" &&
+                    !showBiddingTable && (
+                      <button
+                        onClick={handleViewBidding}
+                        className="bg-[#ff8749] text-white py-2 px-4 rounded"
+                      >
+                        View Bidding
+                      </button>
+                    )}
+
+                  {showBiddingTable && (
+                    <button
+                      onClick={handleCancelBidding}
+                      className="bg-red-500 text-white py-2 px-4 rounded"
+                    >
+                      Hide Bidding Details
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
+
+            {showBiddingTable && bidders.length > 0 && (
+              <div className="mt-8">
+                <table className="min-w-full bg-white border border-gray-300">
+                  <thead>
+                    <tr>
+                      <th className="py-2 px-4 border-b">Bidder Id</th>
+                      <th className="py-2 px-4 border-b">Bid Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bidders.map((bidder, index) => (
+                      <tr key={index}>
+                        <td className="py-2 px-4 border-b text-black">
+                          {bidder.buyerId}
+                        </td>
+                        <td className="py-2 px-4 border-b text-black">
+                          Rs.{bidder.biddingprice}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>

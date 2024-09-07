@@ -39,7 +39,7 @@ const MyListing = () => {
   }, [status, successMessage, errorMessage, dispatch, itemData]);
 
   const handleSeeMore = () => {
-    setVisibleItems((prevVisibleItems) => prevVisibleItems + 6); // Show 6 more items
+    setVisibleItems((prevVisibleItems) => prevVisibleItems + 6);
   };
 
   return (
