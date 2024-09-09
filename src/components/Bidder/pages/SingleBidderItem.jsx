@@ -16,6 +16,7 @@ const SingleBidderItem = () => {
   const [showBidButton, setShowBidButton] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [bidAmount, setBidAmount] = useState("");
+  const [showEdit, setShowEdit] = useState(false);
 
   const { id } = useParams();
 
@@ -56,9 +57,27 @@ const SingleBidderItem = () => {
       setShowBidButton(true);
     }
   };
+  const handleBiddingEdit = (e) => {
+    e.preventDefault();
+    setShowInput(true);
+  };
+  const fetchBiddingItems = async () => {
+    const response = await API.get(
+      `/biddingItems/${localStorage.getItem("role")}/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      setShowEdit(true);
+    }
+  };
 
   useEffect(() => {
     fetchSingleItem();
+    fetchBiddingItems();
   }, []);
 
   useEffect(() => {
@@ -79,11 +98,16 @@ const SingleBidderItem = () => {
 
   const handleBidSubmit = (e) => {
     e.preventDefault();
-    const obj = {
-      data: data,
-      biddingAmount: bidAmount,
-    };
-    socket.emit("biddingAmount", obj);
+    if (showEdit === false) {
+      const obj = {
+        data: data,
+        biddingAmount: bidAmount,
+      };
+      socket.emit("biddingAmount", obj);
+    } else if (showEdit === true) {
+      socket.emit("editBidding", { id, bidAmount });
+    }
+
     setShowInput(false);
   };
 
@@ -166,12 +190,21 @@ const SingleBidderItem = () => {
                 </p>
 
                 {showInput === false ? (
-                  <button
-                    onClick={() => setShowInput(true)}
-                    className="bg-[#ff8749] text-white py-2 px-4 rounded w-full mb-4"
-                  >
-                    Place Bid
-                  </button>
+                  showEdit === false ? (
+                    <button
+                      onClick={() => setShowInput(true)}
+                      className="bg-[#ff8749] text-white py-2 px-4 rounded w-full mb-4"
+                    >
+                      Place Bid
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleBiddingEdit}
+                      className="bg-[#ff8749] text-white py-2 px-4 rounded w-full mb-4"
+                    >
+                      Edit Bid
+                    </button>
+                  )
                 ) : (
                   <form onSubmit={handleBidSubmit} className="space-y-4">
                     <input

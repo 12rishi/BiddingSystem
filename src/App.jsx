@@ -21,6 +21,7 @@ import BidderHome from "./components/Bidder/pages/home/Home";
 import SellerCard from "./components/profile/Profile";
 import SingleBidderItem from "./components/Bidder/pages/SingleBidderItem";
 import { SocketProvider } from "../Socket/SocketContext";
+import SingleBidderListingPage from "./components/Bidder/pages/myListing/SingleBidderListingPage";
 
 function App() {
   return (
@@ -53,6 +54,10 @@ function App() {
               <Route path="/edit/:id" element={<Edit />} />
               <Route path="/profile" element={<SellerCard />} />
               <Route path="/bidderItem/:id" element={<SingleBidderItem />} />
+              <Route
+                path="/bidderListing/:id"
+                element={<SingleBidderListingPage />}
+              />
             </Routes>
           </BrowserRouter>
         </SocketProvider>

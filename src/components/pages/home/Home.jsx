@@ -9,22 +9,19 @@ import Hammer from "./Hammer.png";
 import Linking from "./Linking.png";
 import Clock from "./Clock.png";
 import { useSocket } from "../../../../Socket/SocketContext";
+import API from "../../../http/axiosInstance";
 
 export const Home = () => {
-  const socket = useSocket();
   useEffect(() => {
-    if (socket) {
-      socket.emit("hello", "I am home page");
-      socket.on("hi", (hi) => {
-        console.log(hi);
+    const homeFetch = async () => {
+      await API.get(`/home/${localStorage.getItem("role")}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+        },
       });
-    }
-    return () => {
-      if (socket) {
-        socket.off("hi");
-      }
     };
-  }, [socket]);
+    homeFetch();
+  }, []);
   return (
     <>
       <Navbar />

@@ -26,7 +26,6 @@ const Card = ({ data }) => {
             <h2 className="text-xl font-bold text-white md:text-2xl lg:text-3xl">
               {data.itemName}
             </h2>
-            <p className="text-white md:text-lg lg:text-xl">hello</p>
           </div>
         </div>
       </Link>

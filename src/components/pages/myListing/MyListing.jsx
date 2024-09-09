@@ -29,6 +29,7 @@ const MyListing = () => {
     if (status === STATUS.SUCCESS && successMessage) {
       if (itemData && itemData.length > 0) {
         setListData(itemData);
+        console.log(listData);
       }
       dispatch(setStatus(null));
       dispatch(setSuccessMessage(null));

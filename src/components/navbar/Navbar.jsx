@@ -4,9 +4,11 @@ import { MdOutlineNotifications } from "react-icons/md";
 import TH from "./TH.png";
 import { useDispatch, useSelector } from "react-redux";
 import { setRole } from "../../../store/authSlice";
+import { useSocket } from "../../../Socket/SocketContext";
 
 const Navbar = () => {
-  const { role } = useSelector((store) => store.auth);
+  const socket = useSocket();
+  const role = localStorage.getItem("role");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = (e) => {
@@ -18,7 +20,18 @@ const Navbar = () => {
   };
   useEffect(() => {
     dispatch(setRole(localStorage.getItem("role")));
-  }, [role]);
+    if (socket) {
+      socket.emit("hello", "hey guyz");
+      socket.on("hi", (message) => {
+        console.log(message);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off("hello");
+      }
+    };
+  }, [role, socket]);
   return (
     <nav className="bg-[#52B5B5] p-4 shadow-xl">
       <div className="container mx-auto flex items-center justify-between">
@@ -50,9 +63,16 @@ const Navbar = () => {
           <Link to="/listItem" className="text-white hover:text-gray-200">
             My Listing
           </Link>
-          <Link to="/addItem" className="text-white hover:text-gray-200">
-            Add Item
-          </Link>
+          {role === "seller" ? (
+            <Link to="/addItem" className="text-white hover:text-gray-200">
+              Add Item
+            </Link>
+          ) : (
+            <Link to="/faq" className="text-white hover:text-gray-200">
+              FAQ
+            </Link>
+          )}
+
           <Link
             to="/notifications"
             className="text-white hover:text-gray-200  "

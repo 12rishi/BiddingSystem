@@ -79,11 +79,11 @@ const SinglePageitem = () => {
   };
 
   const handleViewBidding = () => {
-    setShowBiddingTable(true); // Show the table
+    setShowBiddingTable(true);
   };
 
   const handleCancelBidding = () => {
-    setShowBiddingTable(false); // Hide the table
+    setShowBiddingTable(false);
   };
   useEffect(() => {
     if (socket && id) {
@@ -180,7 +180,7 @@ const SinglePageitem = () => {
                     ""
                   )}
 
-                  {data.availableForBidding === "available" &&
+                  {data.availableForBidding === "notAvailable" &&
                     !showBiddingTable && (
                       <button
                         onClick={handleViewBidding}
@@ -207,7 +207,7 @@ const SinglePageitem = () => {
                 <table className="min-w-full bg-white border border-gray-300">
                   <thead>
                     <tr>
-                      <th className="py-2 px-4 border-b">Bidder Id</th>
+                      <th className="py-2 px-4 border-b">Bidder Name</th>
                       <th className="py-2 px-4 border-b">Bid Amount</th>
                     </tr>
                   </thead>
@@ -215,7 +215,7 @@ const SinglePageitem = () => {
                     {bidders.map((bidder, index) => (
                       <tr key={index}>
                         <td className="py-2 px-4 border-b text-black">
-                          {bidder.buyerId}
+                          {bidder.buyerAuth.userName}
                         </td>
                         <td className="py-2 px-4 border-b text-black">
                           Rs.{bidder.biddingprice}
