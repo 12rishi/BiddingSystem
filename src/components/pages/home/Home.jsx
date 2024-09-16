@@ -24,7 +24,6 @@ export const Home = () => {
   }, []);
   return (
     <>
-      <Navbar />
       <div className="bg-[#f0f8ff] p-2">
         <DescriptionCard />
 

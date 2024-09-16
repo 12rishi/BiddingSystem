@@ -53,11 +53,14 @@ const Edit = () => {
   const [submitted, setSubmitted] = useState(false);
   useEffect(() => {
     const initialRender = async () => {
-      const response = await API.get(`/item/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
-        },
-      });
+      const response = await API.get(
+        `/item/${localStorage.getItem("role")}/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jsonWebToken")}`,
+          },
+        }
+      );
       setFormData(response?.data?.data);
     };
     initialRender();
@@ -89,12 +92,11 @@ const Edit = () => {
 
     dispatch(handleEdit(formdata, id));
 
-    setSubmitted(true); // Update to show submission state
+    setSubmitted(true);
   };
 
   return (
     <>
-      <Navbar />
       <div className="flex items-center justify-center py-3 min-h-screen bg-gray-100">
         <Transition
           show={!submitted}

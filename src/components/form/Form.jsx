@@ -33,7 +33,7 @@ export const Form = ({ role, auth, onSubmit }) => {
     e.preventDefault();
     if (auth === "register" && role === "seller") {
       const files = checkError.current.files;
-      if (files.length < 2) {
+      if (files.length !== 2) {
         setError("Submit front and back photo of citizenship");
         return;
       }
@@ -49,11 +49,14 @@ export const Form = ({ role, auth, onSubmit }) => {
 
     if (auth === "register") {
       const phoneNumber = formDatas.phoneNumber.length;
-      if (phoneNumber !== 10) {
-        setPhoneError("please provide valid phone number");
-        return;
+      if (
+        phoneNumber.length !== 10 ||
+        !/^(97|98)\d{8}$/.test(formDatas.phoneNumber)
+      ) {
+        setPhoneError("Phone number must be 10 digits and start with 97 or 98");
+      } else {
+        setPhoneError("");
       }
-      setPhoneError("");
     }
     const formData = new FormData();
     if (auth === "register" && role === "seller") {
@@ -84,12 +87,10 @@ export const Form = ({ role, auth, onSubmit }) => {
           id="page-container"
           className="mx-auto  flex min-h-dvh w-full min-w-[320px] flex-col bg-white dark:bg-gray-900 dark:text-gray-100 "
         >
-          {/* Page Content */}
           <main
             id="page-content"
             className=" flex justify-between  bg-green-300 "
           >
-            {/* image content */}
             <div className="flex justify-center  w-[50%] items-center  min-h-dvh bg-[#bffcfb]  ">
               <div>
                 <img src={ThriftLogo} alt="" />
@@ -97,9 +98,7 @@ export const Form = ({ role, auth, onSubmit }) => {
             </div>
 
             <div className="relative  flex min-h-dvh w-[50%] max-w-10xl items-center bg-white justify-center overflow-hidden p-4 lg:p-8">
-              {/* Sign In Section */}
               <section className="w-full max-w-xl py-6">
-                {/* Header */}
                 <header className="mb-10 text-center">
                   <h1 className="mb-2 inline-flex items-center gap-2 text-2xl font-bold">
                     <span className="text-[#008080]">Thrift Heaven</span>
@@ -267,7 +266,6 @@ export const Form = ({ role, auth, onSubmit }) => {
                         </button>
                         {role === "bidder" ? (
                           <>
-                            {/* Divider: With Label */}
                             <div className="my-5 flex items-center">
                               <span
                                 aria-hidden="true"
@@ -281,7 +279,7 @@ export const Form = ({ role, auth, onSubmit }) => {
                                 className="h-0.5 grow rounded bg-gray-100 "
                               />
                             </div>
-                            {/* END Divider: With Label */}
+
                             <div className="grid grid-cols gap-2">
                               <button
                                 type="button"
@@ -315,21 +313,16 @@ export const Form = ({ role, auth, onSubmit }) => {
                     )}
                   </div>
                 </div>
-                {/* END Sign In Form */}
 
-                {/* Footer */}
                 <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
                   Powered by
                   <a href="#" className="font-medium  hover:text-[#008080]">
                     Thrift Heaven
                   </a>
                 </div>
-                {/* END Footer */}
               </section>
-              {/* END Sign In Section */}
             </div>
           </main>
-          {/* END Page Content */}
         </div>
       </div>
       <div></div>

@@ -10,14 +10,14 @@ const RoleSelector = () => {
         </div>
         <div className="flex flex-col gap-8 mt-6 ">
           <Link to="/login?role=bidder">
-            <button className="bg-[#ff8749] p-4  rounded-full w-72 text-white text-[2rem] ">
+            <button className=" bg-[#008080] p-4  rounded-full w-72 text-white text-[2rem] border-white border-2 shadow-xl ">
               Bidder
             </button>
           </Link>
           <hr className="text-black h-5 border-gray-500 " />
 
           <Link to="/login?role=seller">
-            <button className="bg-[#052337] p-4 rounded-full w-72 text-white text-[2rem]">
+            <button className="bg-[#ff8749] p-4 rounded-full w-72 text-white text-[2rem] border-white border-2 shadow-xl">
               Seller
             </button>
           </Link>

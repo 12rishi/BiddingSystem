@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/Navbar";
 import { Footer } from "../footer/Footer";
 import API from "../../http/axiosInstance";
+import Spinner from "../spinner/Spinner";
 
 const SellerCard = () => {
   const [profileData, setProfileData] = useState(null);
@@ -58,7 +59,6 @@ const SellerCard = () => {
 
   return (
     <>
-      <Navbar />
       {profileData ? (
         <div className="flex items-center justify-center bg-[#f0f8ff] h-screen">
           <div className="bg-[#d2f5f9] p-8 h-auto rounded-lg shadow-lg w-96 ">
@@ -94,9 +94,7 @@ const SellerCard = () => {
                 <p className="text-gray-600 mb-2">
                   Email: {profileData?.email}
                 </p>
-                <p className="text-gray-600 mb-4 text-center">
-                  Address: {profileData?.address}
-                </p>
+
                 <button className="bg-[#ff8749] text-white px-4 py-2  rounded hover:bg-orange-600">
                   Edit profile
                 </button>
@@ -105,7 +103,7 @@ const SellerCard = () => {
           </div>
         </div>
       ) : (
-        ""
+        <Spinner />
       )}
 
       <Footer />

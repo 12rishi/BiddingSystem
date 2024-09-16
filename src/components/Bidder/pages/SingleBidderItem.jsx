@@ -7,6 +7,7 @@ import { useSocket } from "../../../../Socket/SocketContext";
 
 const SingleBidderItem = () => {
   const socket = useSocket();
+  const [totalBid, setTotalBid] = useState();
   const [data, setData] = useState({});
   const [currentTime, setCurrentTime] = useState("");
   const [timeDiff, setTimeDiff] = useState("");
@@ -61,6 +62,7 @@ const SingleBidderItem = () => {
     e.preventDefault();
     setShowInput(true);
   };
+
   const fetchBiddingItems = async () => {
     const response = await API.get(
       `/biddingItems/${localStorage.getItem("role")}/${id}`,
@@ -77,8 +79,13 @@ const SingleBidderItem = () => {
 
   useEffect(() => {
     fetchSingleItem();
+
     fetchBiddingItems();
-  }, []);
+    socket.emit("numberOfBids", id);
+    socket.on("countedLength", (val) => {
+      setTotalBid(val);
+    });
+  }, [id]);
 
   useEffect(() => {
     timingfunction();
@@ -118,11 +125,9 @@ const SingleBidderItem = () => {
 
   return (
     <>
-      <Navbar />
       <div className="bg-[#f0f8ff] p-5">
         {data && (
           <div className="max-w-7xl mx-auto bg-white shadow-md h-max rounded-sm p-7 mt-11 mb-10">
-            {/* Image Container */}
             <div className="w-full bg-white p-3 flex justify-center mb-10">
               {images.length > 0 && (
                 <div className="relative w-3/5">
@@ -147,9 +152,7 @@ const SingleBidderItem = () => {
               )}
             </div>
 
-            {/* Bottom Containers */}
             <div className="flex justify-center gap-x-16  space-x-4">
-              {/* Item Description Container */}
               <div className="w-1/3 bg-[#f0f8ff] p-5 rounded-md shadow-sm hover:shadow-lg">
                 <h2 className="text-3xl font-semibold mb-2">
                   {data.itemName || "Item Name"}
@@ -174,70 +177,66 @@ const SingleBidderItem = () => {
                 </p>
               </div>
 
-              {/* Bidding Option Container */}
               <div className="w-1/3 bg-[#f0f8ff] p-5 rounded-md shadow-sm hover:shadow-lg">
                 <h2 className="text-2xl font-semibold mb-4">
                   {data.itemName || "Item Name"}
                 </h2>
 
                 <p className="text-gray-600 mb-4">
-                  <span className="italic font-bold">Current Bid</span>:{" "}
-                  {data.currentBid || "No bids yet"}
-                </p>
-                <p className="text-gray-600 mb-4">
-                  <span className="italic font-bold">Ending Soon</span>:{" "}
-                  {data.endingSoon ? "Yes" : "No"}
+                  <span className="italic font-bold">Current Bid</span>:
+                  {totalBid || "No bids yet"}
                 </p>
 
-                {showInput === false ? (
-                  showEdit === false ? (
-                    <button
-                      onClick={() => setShowInput(true)}
-                      className="bg-[#ff8749] text-white py-2 px-4 rounded w-full mb-4"
-                    >
-                      Place Bid
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleBiddingEdit}
-                      className="bg-[#ff8749] text-white py-2 px-4 rounded w-full mb-4"
-                    >
-                      Edit Bid
-                    </button>
-                  )
-                ) : (
-                  <form onSubmit={handleBidSubmit} className="space-y-4">
-                    <input
-                      type="number"
-                      value={bidAmount}
-                      onChange={handleBidAmountChange}
-                      placeholder="Enter your bid amount"
-                      className="border p-2 rounded w-full"
-                      required
-                    />
-                    <div className="flex justify-between space-x-4">
+                {data.availableForBidding === "available" &&
+                  (showInput === false ? (
+                    showEdit === false ? (
                       <button
-                        type="submit"
-                        className="bg-[#ff8749] hover:bg-orange-500 text-white py-2 px-4 rounded"
+                        onClick={() => setShowInput(true)}
+                        className="bg-[#ff8749] text-white py-2 px-4 rounded w-full mb-4"
                       >
                         Place Bid
                       </button>
+                    ) : (
+                      <button
+                        onClick={handleBiddingEdit}
+                        className="bg-[#ff8749] text-white py-2 px-4 rounded w-full mb-4"
+                      >
+                        Edit Bid
+                      </button>
+                    )
+                  ) : (
+                    <form onSubmit={handleBidSubmit} className="space-y-4">
+                      <input
+                        type="number"
+                        value={bidAmount}
+                        onChange={handleBidAmountChange}
+                        placeholder="Enter your bid amount"
+                        className="border p-2 rounded w-full"
+                        required
+                      />
+                      <div className="flex justify-between space-x-4">
+                        <button
+                          type="submit"
+                          className="bg-[#ff8749] hover:bg-orange-500 text-white py-2 px-4 rounded"
+                        >
+                          Place Bid
+                        </button>
+                        <button
+                          type="button"
+                          className="bg-[#66b2b2] hover:bg-[#52bfbf] text-white py-2 px-4 rounded"
+                        >
+                          Send Message
+                        </button>
+                      </div>
                       <button
                         type="button"
-                        className="bg-[#66b2b2] hover:bg-[#52bfbf] text-white py-2 px-4 rounded"
+                        onClick={() => setShowInput(false)}
+                        className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded w-full"
                       >
-                        Send Message
+                        Cancel
                       </button>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowInput(false)}
-                      className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded w-full"
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                )}
+                    </form>
+                  ))}
               </div>
             </div>
           </div>

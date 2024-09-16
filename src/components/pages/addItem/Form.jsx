@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { toast } from "react-toastify";
 
 const AddItem = ({ onSubmit }) => {
   const [image, setImage] = useState([]);
+  const [phoneNumberErr, setPhoneNumberErr] = useState(null);
+  const [imageErr, setImgErr] = useState(null);
   const [formData, setFormData] = useState({
     itemName: "",
     category: "vehicle",
@@ -30,6 +33,19 @@ const AddItem = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (image.length != 4) {
+      setImgErr("4 image of an item is required ");
+      return;
+    }
+    if (
+      formData.phoneNumber.length !== 10 ||
+      !/^(97|98)\d{8}$/.test(formData.phoneNumber)
+    ) {
+      setPhoneNumberErr(
+        "Phone number must be 10 digits and start with 97 or 98"
+      );
+      return;
+    }
     const formdata = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       formdata.append(key, value);
@@ -48,8 +64,15 @@ const AddItem = ({ onSubmit }) => {
     }
     onSubmit(formdata);
 
-    setSubmitted(true); // Update to show submission state
+    setSubmitted(true);
   };
+  useEffect(() => {
+    if (imageErr) {
+      toast.error(imageErr);
+    } else if (phoneNumberErr) {
+      toast.error(phoneNumberErr);
+    }
+  }, [imageErr, phoneNumberErr]);
 
   return (
     <div className="flex items-center justify-center py-3 min-h-screen bg-gray-100">

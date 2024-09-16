@@ -17,6 +17,7 @@ const SinglePageitem = () => {
 
   const { id } = useParams();
   const socket = useSocket();
+
   const fetchSingleItem = async () => {
     try {
       const response = await API.get(
@@ -85,11 +86,13 @@ const SinglePageitem = () => {
   const handleCancelBidding = () => {
     setShowBiddingTable(false);
   };
+
   useEffect(() => {
     if (socket && id) {
       socket.emit("sendBiddingData", id);
     }
   }, [socket, id]);
+
   useEffect(() => {
     if (socket) {
       socket.on("fetchBiddingData", (data) => {
@@ -109,82 +112,77 @@ const SinglePageitem = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="bg-[#f0f8ff] p-5">
+      <div className="bg-[#f0f8ff] p-4 md:p-6 lg:p-8">
         {data && (
-          <div className="max-w-7xl mx-auto bg-white shadow-md h-max rounded-sm overflow-hidden p-7 mt-11 mb-10">
-            <div className="relative w-full bg-white p-3">
+          <div className="max-w-7xl mx-auto bg-white shadow-md rounded-lg overflow-hidden p-4 md:p-6 lg:p-8 mt-8 mb-8">
+            <div className="relative w-full bg-white p-2 md:p-4">
               {images.length > 0 && (
                 <img
                   src={images[currentImageIndex]}
                   alt={`Item Image ${currentImageIndex + 1}`}
-                  className="w-full h-96 object-contain"
+                  className="w-full h-64 object-contain md:h-80 lg:h-96"
+                  loading="lazy"
                 />
               )}
               <button
                 onClick={handlePreviousImage}
-                className="absolute top-1/2 left-9 transform -translate-y-1/2 shadow-sm shadow-black bg-white text-black p-2 rounded-full"
+                className="absolute top-1/2 left-4 md:left-6 lg:left-8 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow-lg"
               >
                 &lt;
               </button>
               <button
                 onClick={handleNextImage}
-                className="absolute top-1/2 right-9 transform -translate-y-1/2 shadow-sm shadow-black bg-white text-black p-2 rounded-full"
+                className="absolute top-1/2 right-4 md:right-6 lg:right-8 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow-lg"
               >
                 &gt;
               </button>
             </div>
 
-            <div className="p-4 flex w-[100%] justify-between">
-              <div className="w-[50%] pl-14 ">
-                <h2 className="text-3xl font-semibold mb-2">
+            <div className="p-4 md:p-6 flex flex-col lg:flex-row justify-between">
+              <div className="lg:w-1/2 lg:pl-8">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-2">
                   {data.itemName || "Item Name"}
                 </h2>
-
-                <p className="text-gray-600 mb-4">
-                  <span className="italic font-bold">StartingPrice</span>:
+                <p className="text-gray-600 mb-4 text-lg md:text-xl">
+                  <span className="italic font-bold">Starting Price:</span>{" "}
                   {`Rs.${data.startingPrice}` || "200"}
                 </p>
-
-                <p className="text-gray-600 mb-4">
-                  <span className="italic font-bold">Description</span> :{" "}
+                <p className="text-gray-600 mb-4 text-lg md:text-xl">
+                  <span className="italic font-bold">Description:</span>{" "}
                   {data.description}
                 </p>
               </div>
-              <div>
-                <p className="text-gray-600 mb-4">
-                  <span className="italic font-bold">Shipping Date</span>:{" "}
+              <div className="lg:w-1/2 lg:pl-8">
+                <p className="text-gray-600 mb-4 text-lg md:text-xl">
+                  <span className="italic font-bold">Shipping Date:</span>{" "}
                   {data.createdAt
                     ? new Date(data.createdAt).toLocaleDateString()
                     : ""}
                 </p>
-                <p className="text-gray-600 mb-4">
-                  <span className="italic font-bold">BiddingStatus</span>:{" "}
+                <p className="text-gray-600 mb-4 text-lg md:text-xl">
+                  <span className="italic font-bold">Bidding Status:</span>{" "}
                   {data.availableForBidding}
                 </p>
-                <div className="flex space-y-4 flex-col">
-                  {data.showEditButton ? (
+                <div className="flex flex-col space-y-4">
+                  {data.showEditButton && (
                     <Link to={`/edit/${data.id}`}>
-                      {" "}
-                      <button className="bg-[#ff8749] text-white py-2 px-4 rounded">
+                      <button className="bg-[#ff8749] text-white py-2 px-4 rounded-md text-lg md:text-xl">
                         Edit Listing
                       </button>
                     </Link>
-                  ) : null}
-
-                  {data.availableForBidding === "completed" ? (
-                    <button className="bg-[#ff8749] text-white py-2 px-4 rounded">
-                      Relaunch Auction
-                    </button>
-                  ) : (
-                    ""
                   )}
 
-                  {data.availableForBidding === "notAvailable" &&
+                  {data.availableForBidding === "completed" && (
+                    <button className="bg-[#ff8749] text-white py-2 px-4 rounded-md text-lg md:text-xl">
+                      Relaunch Auction
+                    </button>
+                  )}
+
+                  {data.availableForBidding === "available" &&
                     !showBiddingTable && (
                       <button
                         onClick={handleViewBidding}
-                        className="bg-[#ff8749] text-white py-2 px-4 rounded"
+                        className="bg-[#ff8749] text-white py-2 px-4 rounded-md text-lg md:text-xl"
                       >
                         View Bidding
                       </button>
@@ -193,7 +191,7 @@ const SinglePageitem = () => {
                   {showBiddingTable && (
                     <button
                       onClick={handleCancelBidding}
-                      className="bg-red-500 text-white py-2 px-4 rounded"
+                      className="bg-red-500 text-white py-2 px-4 rounded-md text-lg md:text-xl"
                     >
                       Hide Bidding Details
                     </button>
@@ -203,21 +201,23 @@ const SinglePageitem = () => {
             </div>
 
             {showBiddingTable && bidders.length > 0 && (
-              <div className="mt-8">
-                <table className="min-w-full bg-white border border-gray-300">
+              <div className="mt-6 border border-black w-full lg:w-3/4 mx-auto">
+                <table className="min-w-full bg-[#d2f5f9] text-sm md:text-base">
                   <thead>
                     <tr>
-                      <th className="py-2 px-4 border-b">Bidder Name</th>
-                      <th className="py-2 px-4 border-b">Bid Amount</th>
+                      <th className="py-2 px-4 border-r border-black font-bold">
+                        Bidder Name
+                      </th>
+                      <th className="py-2 px-4 font-bold">Bid Amount</th>
                     </tr>
                   </thead>
                   <tbody>
                     {bidders.map((bidder, index) => (
                       <tr key={index}>
-                        <td className="py-2 px-4 border-b text-black">
+                        <td className="py-2 px-4 border-t border-r border-black text-black">
                           {bidder.buyerAuth.userName}
                         </td>
-                        <td className="py-2 px-4 border-b text-black">
+                        <td className="py-2 px-4 border-t border-black text-black">
                           Rs.{bidder.biddingprice}
                         </td>
                       </tr>

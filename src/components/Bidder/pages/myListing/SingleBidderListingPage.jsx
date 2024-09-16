@@ -53,7 +53,6 @@ const SingleBidderListingPage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="bg-[#f0f8ff] p-5">
         {data && (
           <div className="max-w-7xl mx-auto bg-white shadow-md h-max rounded-sm overflow-hidden p-7 mt-11 mb-10">

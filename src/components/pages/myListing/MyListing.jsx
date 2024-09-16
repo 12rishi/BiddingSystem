@@ -29,7 +29,6 @@ const MyListing = () => {
     if (status === STATUS.SUCCESS && successMessage) {
       if (itemData && itemData.length > 0) {
         setListData(itemData);
-        console.log(listData);
       }
       dispatch(setStatus(null));
       dispatch(setSuccessMessage(null));
@@ -45,19 +44,16 @@ const MyListing = () => {
 
   return (
     <div>
-      <Navbar />
       {listData.length === 0 ? (
         <NoItem />
       ) : (
         <div>
-          {/* Item Grid */}
-          <div className="grid grid-cols-3 gap-y-10 gap-x-6 p-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-6 p-8">
             {listData.slice(0, visibleItems).map((data) => (
               <Card key={data.id} data={data} />
             ))}
           </div>
 
-          {/* See More Button */}
           {visibleItems < listData.length && (
             <div className="text-center mt-4 p-11">
               <button

@@ -41,7 +41,6 @@ const AddItem = () => {
 
   return (
     <>
-      <Navbar />
       <AddItemForm onSubmit={onSubmit} />
       <Footer />
     </>
